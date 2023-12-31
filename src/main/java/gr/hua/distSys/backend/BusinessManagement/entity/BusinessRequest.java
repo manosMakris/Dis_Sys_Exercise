@@ -1,6 +1,7 @@
 package gr.hua.distSys.backend.BusinessManagement.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -30,6 +31,7 @@ public class BusinessRequest {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
+    @JsonBackReference
     private User user;
 
     public User getUser() {

@@ -1,10 +1,12 @@
 package gr.hua.distSys.backend.BusinessManagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +44,8 @@ public class User {
 
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-    private List<BusinessRequest> businessRequests;
+    @JsonManagedReference
+    private List<BusinessRequest> businessRequests = new ArrayList<>();
 
     public User() {
     }

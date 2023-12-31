@@ -2,6 +2,7 @@ package gr.hua.distSys.backend.BusinessManagement.api.controller;
 
 
 import gr.hua.distSys.backend.BusinessManagement.config.JwtUtils;
+import gr.hua.distSys.backend.BusinessManagement.entity.BusinessRequest;
 import gr.hua.distSys.backend.BusinessManagement.entity.Role;
 import gr.hua.distSys.backend.BusinessManagement.entity.User;
 import gr.hua.distSys.backend.BusinessManagement.payload.request.LoginRequest;
@@ -56,6 +57,13 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    private String getUsernameOfActiveUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+
+        return userDetails.getUsername();
+    }
+
     @PostConstruct
     public void setup() {
 
@@ -104,6 +112,21 @@ public class AuthController {
 
             registerUser(signupRequest);
         }
+    }
+
+    @Secured(RoleService.BUSINESS_REPRESENTATIVE)
+    @GetMapping("/getBusinessRequests")
+    public List<BusinessRequest> getBusinessRequests() {
+
+        String username = getUsernameOfActiveUser();
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        User user;
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+            return user.getBusinessRequests();
+        }
+        return null;
     }
 
     @Secured(RoleService.ADMIN)

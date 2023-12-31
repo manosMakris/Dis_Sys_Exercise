@@ -7,6 +7,8 @@ import gr.hua.distSys.backend.BusinessManagement.payload.response.MessageRespons
 import gr.hua.distSys.backend.BusinessManagement.repository.BusinessRequestRepository;
 import gr.hua.distSys.backend.BusinessManagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,12 @@ public class BusinessRequestService {
     public static String REJECTED = "rejected";
     public static String TEMPORARILY_SAVED = "temporarily saved";
 
+    private String getUsernameOfActiveUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+
+        return userDetails.getUsername();
+    }
 
 
     @Autowired
@@ -40,11 +48,42 @@ public class BusinessRequestService {
 
     public BusinessRequest saveBusinessRequest(BusinessRequest businessRequest) {
 
-//        if (businessRequest.getUser() != null) {
-//            Optional<User> user = userRepository.findById(businessRequest.getUser().getId());
-//            user.ifPresent(businessRequest::setUser);
-//        }
-        return businessRequestRepository.save(businessRequest);
+        // Get username
+        String username = getUsernameOfActiveUser();
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        User user;
+
+        if (optionalUser.isPresent()) {
+            // Get user by username
+            user = optionalUser.get();
+
+            // Add the business request to the user
+            List<BusinessRequest> businessRequests = user.getBusinessRequests();
+            businessRequests.add(businessRequest);
+            user.setBusinessRequests(businessRequests);
+
+            // Set the user to the new business request
+            businessRequest.setUser(user);
+
+            // Save the changes to the database
+            userRepository.save(user);
+
+            return businessRequestRepository.save(businessRequest);
+        }
+        return null;
+    }
+
+    public User getUserById(Integer id) {
+        Optional<BusinessRequest> optionalBusinessRequest = businessRequestRepository.findById(id);
+        BusinessRequest businessRequest;
+
+        if (optionalBusinessRequest.isPresent()) {
+            businessRequest = optionalBusinessRequest.get();
+            return businessRequest.getUser();
+        } else {
+            throw new RuntimeException("There is not a business request with id = " + id + ".");
+        }
     }
 
     public List<String> getAllAvailableStates() {
@@ -66,7 +105,7 @@ public class BusinessRequestService {
         }
     }
 
-    public MessageResponse setAfmById(Integer id) {
+    public BusinessRequest setAfmById(Integer id) {
         Optional<BusinessRequest> optionalBusinessRequest = businessRequestRepository.findById(id);
 
         String afm;
@@ -78,10 +117,10 @@ public class BusinessRequestService {
         if (optionalBusinessRequest.isPresent()) {
             BusinessRequest br = optionalBusinessRequest.get();
             br.setAfm(afm);
-            saveBusinessRequest(br);
-            return new MessageResponse("The afm has been successfully created.");
+
+            return br;
         } else {
-            return new MessageResponse("There isn't a business request with id = " + id + ".");
+            return null;
         }
     }
 
@@ -128,15 +167,42 @@ public class BusinessRequestService {
         // Check if the business request is accepted
         if (state.equals(ACCEPTED)) {
             // Set the business request's afm to the given afm
-            setAfmById(br.getId());
+            br = setAfmById(br.getId());
         }
 
         // Save the updated version of the business request back to the database
         // and return the updated version of the business request to the caller.
-        return saveBusinessRequest(br);
+        return businessRequestRepository.save(br);
     }
 
     public BusinessRequest getBusinessRequestById(Integer id) {
         return businessRequestRepository.findById(id).orElse(null);
+    }
+
+    public BusinessRequest updateBusinessRequest(BusinessRequest businessRequest, Integer id) {
+        Optional<BusinessRequest> optionalBusinessRequest = businessRequestRepository.findById(id);
+        BusinessRequest br;
+
+        if (optionalBusinessRequest.isPresent()) {
+            br = optionalBusinessRequest.get();
+            if (businessRequest.getMissionStatement() != null) {
+                br.setMissionStatement(businessRequest.getMissionStatement());
+            }
+            if (businessRequest.getLocation() != null) {
+                br.setLocation(businessRequest.getLocation());
+            }
+            if (businessRequest.getPurpose() != null) {
+                br.setPurpose(businessRequest.getPurpose());
+            }
+            if (businessRequest.getMembers() != null) {
+                br.setMembers(businessRequest.getMembers());
+            }
+            if (businessRequest.getStateOfRequest() != null) {
+                br.setStateOfRequest(businessRequest.getStateOfRequest());
+            }
+
+            return businessRequestRepository.save(br);
+        }
+        return null;
     }
 }
