@@ -46,7 +46,7 @@ public class BusinessRequestService {
         return businessRequestRepository.findAllByStateOfRequest(state);
     }
 
-    public BusinessRequest saveBusinessRequest(BusinessRequest businessRequest) {
+    public BusinessRequest saveBusinessRequest(BusinessRequest new_businessRequest) { //*** changed to new_businessRequest for clarity
 
         // Get username
         String username = getUsernameOfActiveUser();
@@ -60,16 +60,16 @@ public class BusinessRequestService {
 
             // Add the business request to the user
             List<BusinessRequest> businessRequests = user.getBusinessRequests();
-            businessRequests.add(businessRequest);
+            businessRequests.add(new_businessRequest);
             user.setBusinessRequests(businessRequests);
 
             // Set the user to the new business request
-            businessRequest.setUser(user);
+            new_businessRequest.setUser(user);
 
             // Save the changes to the database
-            userRepository.save(user);
+            userRepository.save(user); //*** does that mean there will be two identical users saved?
 
-            return businessRequestRepository.save(businessRequest);
+            return businessRequestRepository.save(new_businessRequest);
         }
         return null;
     }
@@ -90,7 +90,7 @@ public class BusinessRequestService {
         return List.of(SUBMITTED, ACCEPTED, REJECTED, TEMPORARILY_SAVED);
     }
 
-    // Create a controller method to call this function.
+    // Create a controller method to call this function. //*** not yet created? (+ it isn't a good practise to return messageresponses in services right?)
     public MessageResponse setStateById(Integer id, String state) {
         if (!getAllAvailableStates().contains(state)) {
             return new MessageResponse("Invalid state.");

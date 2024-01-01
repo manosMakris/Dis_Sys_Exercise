@@ -31,8 +31,10 @@ public class RoleController {
         boolean success = roleService.deleteRoleById(id);
         if (success) {
             return new MessageResponse("The deletion was successful.");
+//            return new MessageResponse("Role deleted successfully."); //***
         } else {
             return new MessageResponse(null);
+//            return new MessageResponse("Unsuccessful deletion of role."); //***
         }
     }
 
