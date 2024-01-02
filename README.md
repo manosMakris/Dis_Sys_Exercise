@@ -9,6 +9,10 @@ docker run --name ds-lab-pg --rm -e POSTGRES_PASSWORD=pass123 -e POSTGRES_USER=d
 **To run the project:**
 ```bash
 mvm clean
+```
+```bash
 mvn package
+```
+```bash
 java -jar target/BusinessManagement-0.0.1-SNAPSHOT.jar
 ```
