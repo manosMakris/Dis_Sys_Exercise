@@ -115,7 +115,7 @@ public class AuthController {
     }
 
     @Secured(RoleService.BUSINESS_REPRESENTATIVE)
-    @GetMapping("/getBusinessRequests")
+    @GetMapping("/getUsersBusinessRequests")
     public List<BusinessRequest> getBusinessRequests() {
 
         String username = getUsernameOfActiveUser();
