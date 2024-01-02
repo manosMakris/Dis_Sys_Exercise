@@ -50,7 +50,7 @@ public class BusinessRequestController {
     }
 
 
-    @Secured(RoleService.ADMIN)
+    @Secured(RoleService.EMPLOYEE_TAX_OFFICE)
     @GetMapping("/")
     public List<BusinessRequest> getAllBusinessRequests() {
         return businessRequestService.getAllBusinessRequests();

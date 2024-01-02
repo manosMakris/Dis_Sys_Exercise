@@ -46,7 +46,7 @@ public class BusinessRequestService {
         return businessRequestRepository.findAllByStateOfRequest(state);
     }
 
-    public BusinessRequest saveBusinessRequest(BusinessRequest new_businessRequest) { //*** changed to new_businessRequest for clarity
+    public BusinessRequest saveBusinessRequest(BusinessRequest new_businessRequest) {
 
         // Get username
         String username = getUsernameOfActiveUser();
@@ -58,6 +58,11 @@ public class BusinessRequestService {
             // Get user by username
             user = optionalUser.get();
 
+            // Check if the state is valid
+            if (!new_businessRequest.getStateOfRequest().equals(SUBMITTED) && !new_businessRequest.getStateOfRequest().equals(TEMPORARILY_SAVED)) {
+                throw new RuntimeException("The state should be " + TEMPORARILY_SAVED + " or " + SUBMITTED + ".");
+            }
+
             // Add the business request to the user
             List<BusinessRequest> businessRequests = user.getBusinessRequests();
             businessRequests.add(new_businessRequest);
@@ -67,7 +72,7 @@ public class BusinessRequestService {
             new_businessRequest.setUser(user);
 
             // Save the changes to the database
-            userRepository.save(user); //*** does that mean there will be two identical users saved?
+            userRepository.save(user);
 
             return businessRequestRepository.save(new_businessRequest);
         }
@@ -88,21 +93,6 @@ public class BusinessRequestService {
 
     public List<String> getAllAvailableStates() {
         return List.of(SUBMITTED, ACCEPTED, REJECTED, TEMPORARILY_SAVED);
-    }
-
-    // Create a controller method to call this function. //*** not yet created? (+ it isn't a good practise to return messageresponses in services right?)
-    public MessageResponse setStateById(Integer id, String state) {
-        if (!getAllAvailableStates().contains(state)) {
-            return new MessageResponse("Invalid state.");
-        }
-
-        Optional<BusinessRequest> optionalBusinessRequest = businessRequestRepository.findById(id);
-        if (optionalBusinessRequest.isPresent()) {
-            optionalBusinessRequest.get().setStateOfRequest(state);
-            return new MessageResponse("The state has been successfully updated.");
-        } else {
-            return new MessageResponse("There isn't a business request with id = " + id + ".");
-        }
     }
 
     public BusinessRequest setAfmById(Integer id) {
@@ -185,6 +175,15 @@ public class BusinessRequestService {
 
         if (optionalBusinessRequest.isPresent()) {
             br = optionalBusinessRequest.get();
+            if(!br.getStateOfRequest().equals(TEMPORARILY_SAVED)) {
+                return null;
+            }
+            if (businessRequest.getStateOfRequest() != null) {
+                if (businessRequest.getStateOfRequest().equals(TEMPORARILY_SAVED) || businessRequest.getStateOfRequest().equals(SUBMITTED)) {
+                    br.setStateOfRequest(businessRequest.getStateOfRequest());
+                }
+            }
+
             if (businessRequest.getMissionStatement() != null) {
                 br.setMissionStatement(businessRequest.getMissionStatement());
             }
@@ -197,9 +196,7 @@ public class BusinessRequestService {
             if (businessRequest.getMembers() != null) {
                 br.setMembers(businessRequest.getMembers());
             }
-            if (businessRequest.getStateOfRequest() != null) {
-                br.setStateOfRequest(businessRequest.getStateOfRequest());
-            }
+
 
             return businessRequestRepository.save(br);
         }

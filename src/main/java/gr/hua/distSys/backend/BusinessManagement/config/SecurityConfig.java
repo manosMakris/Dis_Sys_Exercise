@@ -53,7 +53,6 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/api/roles/**").hasRole("ADMIN")
-                        .requestMatchers("/api/auth/addRole/**").hasRole("ADMIN") //*** redundant
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
