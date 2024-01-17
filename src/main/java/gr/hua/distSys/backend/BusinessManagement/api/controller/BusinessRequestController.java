@@ -43,7 +43,7 @@ public class BusinessRequestController {
         return businessRequestService.updateBusinessRequest(businessRequest, id);
     }
 
-    @Secured(RoleService.ADMIN)
+    @Secured(RoleService.EMPLOYEE_TAX_OFFICE)
     @GetMapping("/getUser/{id}")
     public User getUser(@PathVariable Integer id) {
         return businessRequestService.getUserById(id);
