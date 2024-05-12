@@ -4,8 +4,12 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 #RUN ./mvnw dependency:go-offline
 COPY ./src ./src
-RUN apt install maven -y
-RUN apt-get update && apt-get install -y maven
+# Install Maven manually
+RUN curl -fsSL -o /tmp/apache-maven.tar.gz https://apache.osuosl.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz \
+    && tar -xzf /tmp/apache-maven.tar.gz -C /opt \
+    && ln -s /opt/apache-maven-3.8.4 /opt/maven \
+    && ln -s /opt/maven/bin/mvn /usr/local/bin \
+    && rm -f /tmp/apache-maven.tar.gz
 
 FROM openjdk:19-jdk-alpine3.16
 RUN apk update && apk add curl
