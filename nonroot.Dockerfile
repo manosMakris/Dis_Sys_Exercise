@@ -5,7 +5,7 @@ COPY mvnw pom.xml ./
 #RUN ./mvnw dependency:go-offline
 COPY ./src ./src
 # Install Maven manually
-RUN curl -fsSL -o /tmp/apache-maven.tar.gz https://apache.osuosl.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz \
+RUN curl -fsSL -o /tmp/apache-maven.tar.gz https://apache.mirror.digitalpacific.com.au/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz \
     && tar -xzf /tmp/apache-maven.tar.gz -C /opt \
     && ln -s /opt/apache-maven-3.8.4 /opt/maven \
     && ln -s /opt/maven/bin/mvn /usr/local/bin \
