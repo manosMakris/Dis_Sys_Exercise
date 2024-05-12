@@ -4,7 +4,8 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 #RUN ./mvnw dependency:go-offline
 COPY ./src ./src
-RUN ./mvnw  package -Dmaven.test.skip
+RUN apt install maven -y
+RUN mvn package -Dmaven.test.skip
 
 FROM openjdk:19-jdk-alpine3.16
 RUN apk update && apk add curl
