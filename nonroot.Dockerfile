@@ -4,6 +4,7 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 #RUN ./mvnw dependency:go-offline
 COPY ./src ./src
+RUN chmod +x ./mvnw
 RUN ./mvnw  package -Dmaven.test.skip
 
 FROM openjdk:19-jdk-alpine3.16
