@@ -16,3 +16,6 @@ mvn package
 ```bash
 java -jar target/BusinessManagement-0.0.1-SNAPSHOT.jar
 ```
+
+
+
