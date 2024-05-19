@@ -25,6 +25,6 @@ public class TestSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers("/api/auth/signup", "/api/auth/signin");
+        return web -> web.ignoring().requestMatchers("/api/auth/signup", "/api/auth/signin");
     }
 }
