@@ -245,7 +245,7 @@ public class AuthController {
                 roles));
     }
 
-    @Secured(RoleService.ADMIN)
+    //@Secured(RoleService.ADMIN)
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
