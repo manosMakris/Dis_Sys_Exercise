@@ -18,7 +18,7 @@ public class TestSecurityConfig {
         http
             .csrf().disable() // Disable CSRF for simplicity in testing
             .authorizeRequests()
-                .antMatchers("/api/auth/signup", "/api/auth/signin").permitAll() // Allow access to the specific endpoints
+                .requestMatchers("/api/auth/signup", "/api/auth/signin").permitAll() // Allow access to the specific endpoints
                 .anyRequest().authenticated(); // Secure other endpoints
         return http.build();
     }
