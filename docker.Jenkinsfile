@@ -14,11 +14,11 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'git@github.com:tsadimasteaching/ds-lab-2023.git'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git branch: 'main', url: 'git@github.com:tsadimasteaching/ds-lab-2023.git#main'
+        //     }
+        // }
         stage('Test') {
             steps {
                 sh 'chmod +x ./mvnw && ./mvnw test'
