@@ -5,6 +5,23 @@ pipeline {
     //     EMAIL_TO = "tsaadimas@hua.gr"
     // }
 
+    // Before running the jenkins pipeline make sure that:
+    // 1) From jenkins vm with user jenkins you can
+    // connect to the db-vm-01, backend-vm-01, frontend-vm-01
+
+    // 2) Make sure to change the variable db_server_ip in
+    // the stage 'Deploy spring boot app' to the ip of the 
+    // vm that hosts the db
+
+    // 3) Make sure to change the variable backend_server_ip in
+    // the stage 'Deploy frontend' to the ip of the 
+    // vm that hosts the backend
+
+    // 4) Make sure to change the variable frontend_server_ip in
+    // the stage 'Deploy frontend' to the ip of the 
+    // vm that hosts the frontend
+    
+
     stages {
         stage('Checkout') {
             steps {
