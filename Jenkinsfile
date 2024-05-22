@@ -49,7 +49,7 @@ pipeline {
                     # edit host var for appserver
 
                     export ANSIBLE_CONFIG=~/workspace/ansible/ansible.cfg
-                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l backend-vm-01 -e db_server_ip=34.38.43.83 ~/workspace/ansible/playbooks/spring.yaml
+                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l backend-vm-01 -e db_server_ip=34.38.43.83 -e user=jenkins -e group=jenkins ~/workspace/ansible/playbooks/spring.yaml
                 '''
             }
         }
