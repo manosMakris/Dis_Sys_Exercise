@@ -44,7 +44,7 @@ pipeline {
             steps {
                 sh '''
                     export ANSIBLE_CONFIG=~/workspace/ansible/ansible.cfg
-                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l docker-server-app-02 ~/workspace/ansible/playbooks/dockerize-app.yaml
+                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l docker-server-app-02 -e user=jenkins -e group=jenkins ~/workspace/ansible/playbooks/dockerize-app.yaml
                 '''
             }
          }
