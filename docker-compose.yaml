@@ -41,7 +41,7 @@ services:
   frontend:
     #image: front
     build:
-      context: https://github.com/manosMakris/Dis_Sys_Exercise_Frontend.git
+      context: https://github.com/manosMakris/Dis_Sys_Exercise_Frontend.git#main
       #context: git@github.com:gkoulis/ds-lab-2023-frontend.git#env
       #dockerfile: node.Dockerfile
 #    environment:
