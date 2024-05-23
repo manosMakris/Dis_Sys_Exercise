@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    // Before running the jenkins pipeline make sure that:
+    // 1) From jenkins vm with user jenkins you can
+    // connect to the docker-server-app-02
+
+    // 2) Change the VITE_BACKEND variable in frontend
+    // repo to the ip of docker-server-app-02
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
     }
@@ -14,11 +21,11 @@ pipeline {
     }
 
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         git branch: 'main', url: 'git@github.com:tsadimasteaching/ds-lab-2023.git#main'
-        //     }
-        // }
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'git@github.com:manosMakris/Dis_Sys_Exercise.git'
+            }
+        }
         stage('Test') {
             steps {
                 sh 'chmod +x ./mvnw && ./mvnw test'
@@ -40,6 +47,22 @@ pipeline {
                 build job: 'ansible'
             }
         }
+        stage('Install docker') {
+            steps {
+                sh '''
+                    export ANSIBLE_CONFIG=~/workspace/ansible/ansible.cfg
+                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l docker-server-app-02 -e user=jenkins ~/workspace/ansible/playbooks/docker.yaml
+                '''
+            }
+        }
+        stage('Install docker compose') {
+            steps {
+                sh '''
+                    export ANSIBLE_CONFIG=~/workspace/ansible/ansible.cfg
+                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l docker-server-app-02 ~/workspace/ansible/playbooks/docker-comp-install.yaml
+                '''
+            }
+        }
         stage('Install project with docker compose') {
             steps {
                 sh '''
@@ -47,7 +70,7 @@ pipeline {
                     ansible-playbook -i ~/workspace/ansible/hosts.yaml -l docker-server-app-02 -e user=jenkins -e group=jenkins ~/workspace/ansible/playbooks/dockerize-app.yaml
                 '''
             }
-         }
+        }
     }
 
     // post {
