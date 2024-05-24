@@ -1,7 +1,7 @@
 pipeline {
     agent any 
 
-    // environment {
+    // environment { 
     //     EMAIL_TO = "tsaadimas@hua.gr"
     // }
 
