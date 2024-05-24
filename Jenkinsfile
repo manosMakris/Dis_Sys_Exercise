@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent any 
 
     // environment {
     //     EMAIL_TO = "tsaadimas@hua.gr"
