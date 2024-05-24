@@ -66,7 +66,7 @@ pipeline {
                     # edit host var for appserver
 
                     export ANSIBLE_CONFIG=~/workspace/ansible/ansible.cfg
-                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l backend-vm-01 -e db_server_ip=35.205.242.7 -e user=jenkins -e group=jenkins ~/workspace/ansible/playbooks/spring.yaml
+                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l backend-vm-01 -e db_server_ip=35.240.9.21 -e user=jenkins -e group=jenkins ~/workspace/ansible/playbooks/spring.yaml
                 '''
             }
         }
@@ -74,7 +74,7 @@ pipeline {
             steps {
                 sh '''
                     export ANSIBLE_CONFIG=~/workspace/ansible/ansible.cfg
-                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l frontend-vm-01 -e backend_server_ip=34.79.35.232 -e frontend_server_ip=35.187.35.110 ~/workspace/ansible/playbooks/vuejs.yaml
+                    ansible-playbook -i ~/workspace/ansible/hosts.yaml -l frontend-vm-01 -e backend_server_ip=34.22.253.155 -e frontend_server_ip=34.76.184.187 ~/workspace/ansible/playbooks/vuejs.yaml
                 '''
             }
        }
