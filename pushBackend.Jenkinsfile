@@ -39,7 +39,7 @@ pipeline {
                     TAG=$HEAD_COMMIT-$BUILD_ID
                     sudo usermod -aG docker jenkins && docker build --rm -t $DOCKER_SERVER/$DOCKER_USER/ds-spring:$TAG -t $DOCKER_SERVER/$DOCKER_USER/ds-spring:latest  -f nonroot.Dockerfile .
                     echo $DOCKER_TOKEN | docker login $DOCKER_SERVER -u $DOCKER_USER --password-stdin
-                    docker push $DOCKER_SERVER/$DOCKER_USER/ds-spring --all-tags
+                    sudo usermod -aG docker jenkins && docker push $DOCKER_SERVER/$DOCKER_USER/ds-spring --all-tags
                 '''
             }
         }
