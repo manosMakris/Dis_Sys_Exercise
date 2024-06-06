@@ -5,6 +5,13 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
     }
 
+    environment {
+        DOCKER_TOKEN = credentials('docker-push-secret')
+        DOCKER_USER = 'it21773'
+        DOCKER_SERVER = 'ghcr.io'
+        DOCKER_EMAIL = 'it21773@hua.gr'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -28,6 +35,32 @@ pipeline {
                 build job: 'pushFrontend'
             }
         }
+
+        stage('Set up .dockerconfig.json file') {
+            steps {
+                sh '''
+                    auth=$(echo -n "$DOCKER_USER:$DOCKER_TOKEN" | base64)
+                    echo '{
+                            "auths": {
+                                "https://$DOCKER_SERVER":{
+                                    "username":"$DOCKER_USER",
+                                    "password":"$DOCKER_TOKEN",
+                                    "email":"$DOCKER_EMAIL",
+                                    "auth":"$auth"
+                                }
+                            }
+                        }' > k8s/.dockerconfig.json
+                '''
+            }
+        }
+
+        stage('Create a secret based on .dockerconfigjson file') {
+            steps {
+                sh '''
+                    kubectl create secret docker-registry registry-credentials --from-file=.dockerconfigjson=k8s/.dockerconfig.json
+                '''
+            }
+        }        
 
         stage('Install database with kubernetes') {
             steps {
