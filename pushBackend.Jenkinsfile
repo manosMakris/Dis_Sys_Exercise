@@ -35,7 +35,6 @@ pipeline {
         stage('Docker build and push') {
             steps {
                 sh '''
-                    id
                     HEAD_COMMIT=$(git rev-parse --short HEAD)
                     TAG=$HEAD_COMMIT-$BUILD_ID
                     sudo usermod -aG docker jenkins && docker build --rm -t $DOCKER_SERVER/$DOCKER_USER/ds-spring:$TAG -t $DOCKER_SERVER/$DOCKER_USER/ds-spring:latest  -f nonroot.Dockerfile .
