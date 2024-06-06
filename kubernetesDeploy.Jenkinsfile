@@ -26,13 +26,13 @@ pipeline {
         
         stage('run pushBackend pipeline') {
             steps {
-                build job: 'pushBackend'
+                build job: 'push-backend-image'
             }
         }
 
         stage('run pushFrontend pipeline') {
             steps {
-                build job: 'pushFrontend'
+                build job: 'push-frontend-image'
             }
         }
 
