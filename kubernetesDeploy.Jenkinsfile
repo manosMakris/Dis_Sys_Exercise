@@ -36,31 +36,31 @@ pipeline {
             }
         }
 
-        stage('Set up .dockerconfig.json file') {
-            steps {
-                sh '''
-                    auth=$(echo -n "$DOCKER_USER:$DOCKER_TOKEN" | base64)
-                    echo '{
-                            "auths": {
-                                "https://$DOCKER_SERVER":{
-                                    "username":"$DOCKER_USER",
-                                    "password":"$DOCKER_TOKEN",
-                                    "email":"$DOCKER_EMAIL",
-                                    "auth":"$auth"
-                                }
-                            }
-                        }' > k8s/.dockerconfig.json
-                '''
-            }
-        }
+//         stage('Set up .dockerconfig.json file') {
+//             steps {
+//                 sh '''
+//                     auth=$(echo -n "$DOCKER_USER:$DOCKER_TOKEN" | base64)
+//                     echo '{
+//                             "auths": {
+//                                 "https://$DOCKER_SERVER":{
+//                                     "username":"$DOCKER_USER",
+//                                     "password":"$DOCKER_TOKEN",
+//                                     "email":"$DOCKER_EMAIL",
+//                                     "auth":"$auth"
+//                                 }
+//                             }
+//                         }' > k8s/.dockerconfig.json
+//                 '''
+//             }
+//         }
 
-        stage('Create a secret based on .dockerconfigjson file') {
-            steps {
-                sh '''
-                    kubectl create secret docker-registry registry-credentials --from-file=.dockerconfigjson=k8s/.dockerconfig.json
-                '''
-            }
-        }        
+//         stage('Create a secret based on .dockerconfigjson file') {
+//             steps {
+//                 sh '''
+//                     kubectl create secret docker-registry registry-credentials --from-file=.dockerconfigjson=k8s/.dockerconfig.json
+//                 '''
+//             }
+//         }
 
         stage('Install database with kubernetes') {
             steps {
