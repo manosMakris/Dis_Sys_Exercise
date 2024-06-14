@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name:  vue
-        image:  ghcr.io/it21773/ds-vue:latest
+        image:  ghcr.io/it21773/ds-vue:36f72fa-11
         resources:
           requests:
             cpu: 200m
