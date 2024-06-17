@@ -77,7 +77,6 @@ pipeline {
                 sh '''
                     kubectl apply -f k8s/spring/spring-deployment.yaml
                     kubectl apply -f k8s/spring/spring-svc.yaml
-                    kubectl apply -f k8s/spring/spring-ingress.yaml
                 '''
             }
         }
