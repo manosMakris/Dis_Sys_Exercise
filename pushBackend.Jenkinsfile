@@ -43,5 +43,16 @@ pipeline {
                 '''
             }
         }
+
+        stage('set latest backend image') {
+            steps {
+                sh '''
+                    HEAD_COMMIT=$(git rev-parse --short HEAD)
+                    TAG=$HEAD_COMMIT-$BUILD_ID
+                    kubectl set image deployment/spring-deployment spring=$DOCKER_SERVER/$DOCKER_USER/ds-spring:$TAG
+                    kubectl rollout status deployment spring-deployment --watch --timeout=2m
+                '''
+            }
+        }
     }
 }
