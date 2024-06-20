@@ -91,7 +91,7 @@ pipeline {
             }
         }
 
-        stage('deploy to k8s') {
+        stage('set latest backend image') {
             steps {
                 sh '''
                     HEAD_COMMIT=$(git rev-parse --short HEAD)
